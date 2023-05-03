@@ -1,7 +1,10 @@
+import time
+
 from .browser import CBrowser
 from selenium.webdriver.common.by import By
 from enum import Enum
 from datetime import datetime
+from lib.settings import  Settings
 from lib.logging import log_info, log_warning, log_error
 
 class CFritzBoxBrowser(CBrowser):
@@ -23,7 +26,7 @@ class CFritzBoxBrowser(CBrowser):
         log_info('Enter password')
         # Enter password
         xpath = '//*[@id="uiPass"]'
-        self.b_setTextbox(type=By.XPATH, tag=xpath, text='')
+        self.b_setTextbox(type=By.XPATH, tag=xpath, text=Settings.Password)
         # Press login button
         xpath = '//*[@id="submitLoginBtn"]'
         self.b_pressButton(type=By.XPATH, tag=xpath)
@@ -87,12 +90,13 @@ class CFritzBoxBrowser(CBrowser):
 
         return data
 
-
     # Click on reconnect button
     def click_reconnect(self):
         log_info('Click "Reconnect" button')
         # Press button
         xpath = '//*[@id="uiReconnectBtn"]'
         self.b_pressButton(type=By.XPATH, tag=xpath)
-        
+        log_info('Wait 1 minute...')
+        # Wait 1 minute
+        time.sleep(60)      
 

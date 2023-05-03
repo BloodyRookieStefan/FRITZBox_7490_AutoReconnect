@@ -2,6 +2,7 @@ import os
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from lib.settings import  Settings, OperatingSystem
 
 class CBrowser:
 
@@ -20,7 +21,12 @@ class CBrowser:
         for option in optionsList:
             options.add_argument(option)
         # Create CHROME object with options
-        self.Driver = webdriver.Chrome(executable_path=self.ChromeDriverPath, options=options)
+        if Settings.System == OperatingSystem.Windows:
+            # Use this for WINDOWS
+            self.Driver = webdriver.Chrome(executable_path=self.ChromeDriverPath, options=options)
+        else:
+            # Use this for LINUX
+            self.Driver = webdriver.Chrome(options=options)
         self.Driver.maximize_window()
 
     # Close webbrowser
