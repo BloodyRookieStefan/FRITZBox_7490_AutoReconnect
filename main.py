@@ -7,6 +7,7 @@ Settings.Debug = False
 Settings.Password = ''
 Settings.System = OperatingSystem.Linux
 Settings.DataStorage = True
+Settings.ReConnectOnStartup = True
 # ---------------------
 
 # Create web controller and join endless loop

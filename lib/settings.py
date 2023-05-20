@@ -10,6 +10,7 @@ class CSettings:
     Password = None
     System = None
     DataStorage = None
+    ReConnectOnStartup = None
 
     def __init__(self) -> None:
         pass
@@ -23,5 +24,7 @@ class CSettings:
             raise ValueError('Invalid data type for Settings.System')
         if not isinstance(self.DataStorage, bool):
             raise ValueError('Invalid data type for Settings.DataStorage')
+        if not isinstance(self.ReConnectOnStartup, bool):
+            raise ValueError('Invalid data type for Settings.ReConnectOnStartup')
         
 Settings = CSettings()

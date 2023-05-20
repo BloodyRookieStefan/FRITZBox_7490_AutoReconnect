@@ -30,20 +30,23 @@ def _logging(_type, _msg):
     logText = '{0} {1} {2}'.format(datetime.now().strftime('%d.%m.%Y-%H:%M:%S'), preFix, _msg)
     # Print out log text
     print(logText)
-    # Handle logging file
-    if FirstLogging:
-        if not os.path.exists(os.path.dirname(LogFile)):
-            os.mkdirs(os.path.dirname(LogFile))
-        if os.path.exists(LogFile):
-            os.remove(LogFile)
-        with open(LogFile, 'a') as f:
-            f.write(f"{datetime.now().strftime('%d.%m.%Y-%H:%M:%S')} SYSTEM> Logfile created - HighValueLogging=={HighValueLogging}\n")
-        FirstLogging = False
-    
-    if HighValueLogging and (_type == WarningLevel.Warning or _type == WarningLevel.Error) or not HighValueLogging:
-        # Write in log file
-        with open(LogFile, 'a') as f:
-            f.write(logText +"\n")
+    try:
+        # Handle logging file
+        if FirstLogging:
+            if not os.path.exists(os.path.dirname(LogFile)):
+                os.mkdirs(os.path.dirname(LogFile))
+            if os.path.exists(LogFile):
+                os.remove(LogFile)
+            with open(LogFile, 'a') as f:
+                f.write(f"{datetime.now().strftime('%d.%m.%Y-%H:%M:%S')} SYSTEM> Logfile created - HighValueLogging=={HighValueLogging}\n")
+            FirstLogging = False
+        
+        if HighValueLogging and (_type == WarningLevel.Warning or _type == WarningLevel.Error) or not HighValueLogging:
+            # Write in log file
+            with open(LogFile, 'a') as f:
+                f.write(logText +"\n")
+    except:
+        pass
     
 
 # Log info

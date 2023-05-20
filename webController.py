@@ -8,15 +8,18 @@ from lib.logging import log_info, log_warning, log_error
 
 class CWebController:
     
-    Debug = False               # Debug flag
     LastReconnect = None        # Datetime of last reconnect
+    LastHeartBeat = -1
 
     def __init__(self) -> None:
-        self.LastReconnect = datetime.now()
+        if Settings.ReConnectOnStartup:
+            self.LastReconnect = datetime(1980, 1, 1)
+        else:
+            self.LastReconnect = datetime.now()
 
     # Endless loop 
     def loop(self):
-
+        # Validate settings
         if isinstance(Settings, CSettings):
             Settings.validate()
         else:
@@ -28,11 +31,19 @@ class CWebController:
         else:
             log_info('Joining endless loop...')
             while True:
+                diffSeconds = (datetime.now() - self.LastReconnect).seconds
+
                 # Last reconnect is over 3 Hours and current Hour is 3AM
-                if (datetime.now() - self.LastReconnect).seconds > 10800 and datetime.now().hour == 3:
+                if (diffSeconds > 10800 and datetime.now().hour == 3) or self.LastReconnect.year == 1980:
                     self.trigger()
-                # Wait 1 minutes
-                time.sleep(60)
+                
+                # Send heartbeat
+                if datetime.now().hour != self.LastHeartBeat:
+                    self.LastHeartBeat = datetime.now().hour
+                    print(f'Heartbeat at {datetime.now().strftime("%d.%m.%Y-%H")} O\'Clock - Delta: {diffSeconds}[s] - Last reconnect: {self.LastReconnect.strftime("%d.%m.%Y-%H:%M:%S")}')
+
+                # Wait 30 seconds
+                time.sleep(30)
 
     # Trigger for reconnect
     def trigger(self):

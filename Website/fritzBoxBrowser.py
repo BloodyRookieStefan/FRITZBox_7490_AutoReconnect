@@ -11,7 +11,7 @@ class CFritzBoxBrowser(CBrowser):
     
     # Start browser and open URL
     def open(self):
-        webpage = 'http://fritz.box/'
+        webpage = 'http://fritz.box/start'
         log_info(f'Start browser "{webpage}"')
         self.b_start()
         self.b_openPage(link=webpage)
