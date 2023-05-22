@@ -33,7 +33,7 @@ class CWebsiteController():
                 if not Settings.Debug:
                     self.Browser.click_reconnect()                      # Reconnect button
                 self.Browser.close()                                    # Close browser
-                i = 3
+                i = tryMaxCounter
             except Exception as e:
                 log_error(f"Browser reconnect failed: {type(e).__name__}, Args: {e.args}")
                 i = i + 1

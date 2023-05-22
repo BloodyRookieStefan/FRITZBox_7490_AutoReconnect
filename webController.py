@@ -31,16 +31,15 @@ class CWebController:
         else:
             log_info('Joining endless loop...')
             while True:
-                diffSeconds = (datetime.now() - self.LastReconnect).seconds
-
                 # Last reconnect is over 3 Hours and current Hour is 3AM
-                if (diffSeconds > 10800 and datetime.now().hour == 3) or self.LastReconnect.year == 1980:
+                if ((datetime.now() - self.LastReconnect).total_seconds() > 10800 and datetime.now().hour == 3) or self.LastReconnect.year == 1980:
+                    print('Send trigger')
                     self.trigger()
                 
                 # Send heartbeat
                 if datetime.now().hour != self.LastHeartBeat:
+                    print(f'Heartbeat at {datetime.now().strftime("%d.%m.%Y-%H")} O\'Clock - Delta: {(datetime.now() - self.LastReconnect).total_seconds()}[s] - Last reconnect: {self.LastReconnect.strftime("%d.%m.%Y-%H:%M:%S")}')
                     self.LastHeartBeat = datetime.now().hour
-                    print(f'Heartbeat at {datetime.now().strftime("%d.%m.%Y-%H")} O\'Clock - Delta: {diffSeconds}[s] - Last reconnect: {self.LastReconnect.strftime("%d.%m.%Y-%H:%M:%S")}')
 
                 # Wait 30 seconds
                 time.sleep(30)
