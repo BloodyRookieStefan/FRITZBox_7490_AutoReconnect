@@ -2,8 +2,8 @@
 from enum import Enum
 
 class OperatingSystem(Enum):
-    Windows = 0
-    Linux = 1
+    Linux = 0
+    Windows = 1
 
 class CSettings:
     Debug = None
@@ -11,6 +11,7 @@ class CSettings:
     System = None
     DataStorage = None
     ReConnectOnStartup = None
+    LowResolutionMode = None
 
     def __init__(self) -> None:
         pass
@@ -26,5 +27,7 @@ class CSettings:
             raise ValueError('Invalid data type for Settings.DataStorage')
         if not isinstance(self.ReConnectOnStartup, bool):
             raise ValueError('Invalid data type for Settings.ReConnectOnStartup')
+        if not isinstance(self.LowResolutionMode, bool):
+            raise ValueError('Invalid data type for Settings.LowResolutionMode')
         
 Settings = CSettings()

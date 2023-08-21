@@ -34,6 +34,11 @@ class CFritzBoxBrowser(CBrowser):
     # Navigate to online monitor
     def navigate_to_online_monitor(self):
         log_info('Navigate to "Online monitor"')
+        # If low resulution mode => Click logo first in order to open menue
+        if Settings.LowResolutionMode:
+            log_info(f'Execute with low resulution mode')
+            xpath = '//*[@id="blueBarLogo"]'
+            self.b_pressButton(type=By.XPATH, tag=xpath)
         # Press Internet
         xpath = '//*[@id="inet"]'
         self.b_pressButton(type=By.XPATH, tag=xpath)

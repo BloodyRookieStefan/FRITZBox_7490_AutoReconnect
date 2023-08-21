@@ -16,14 +16,15 @@ class CWebsiteController():
         tryMaxCounter = 3
         i = 0
 
+        dlData = None
+        connectData = None
+
         while i < tryMaxCounter:
             try:
                 self.Browser.open()                                     # Start browser
                 self.Browser.login()                                    # Login on landing page
                 self.Browser.navigate_to_online_monitor()               # Online monitor
 
-                dlData = None
-                connectData = None
                 if Settings.DataStorage:
                     self.Browser.click_tab_online_zaehler()            # Online zaehler
                     dlData = self.Browser.get_download_data()          # Get download data     

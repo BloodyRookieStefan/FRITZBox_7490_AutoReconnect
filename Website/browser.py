@@ -44,7 +44,7 @@ class CBrowser:
         self.Driver.refresh()
 
     # Get text value from attribute
-    def b_getTextValue(self, type, tag, to=600):
+    def b_getTextValue(self, type, tag, to=300):
         # Wait till button is present
         self.b_wait_until_tag_is_present(type=type, tag=tag)
         # Search and get element data
@@ -54,14 +54,14 @@ class CBrowser:
     # type = By.ID / By.CLASS_NAME ....
     # tag = Name of item
     # to = Timeout in seconds
-    def b_wait_until_tag_is_present(self, type, tag, to=600):
+    def b_wait_until_tag_is_present(self, type, tag, to=300):
         WebDriverWait(self.Driver, to).until(EC.presence_of_element_located((type, tag))) 
 
     # Wait until tag is clickable
     # type = By.ID / By.CLASS_NAME ....
     # tag = Name of item
     # to = Timeout in seconds
-    def b_wait_until_tag_is_clickable(self, type, tag, to=600):
+    def b_wait_until_tag_is_clickable(self, type, tag, to=300):
         WebDriverWait(self.Driver, to).until(EC.element_to_be_clickable((type, tag))) 
 
     # Switch back to default frame
