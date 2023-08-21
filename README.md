@@ -1,4 +1,5 @@
 # FRITZBox_7490_AutoReconnect
+Reconnect automatically every 24 hours with your DSL provider
 ## Requirements
 * Python 3.7 [www.python.org](https://www.python.org/)
 * Selenium package
@@ -11,7 +12,7 @@
 * Install Selenium `pip install selenium`
 * Install Chrome webbrowser `sudo apt install chromium-browser`
 * Install Chromium driver `sudo apt-get install chromium-chromedriver`
-## Start python script as service on startup
+## Start python script as service on startup (Option 1)
 Create `/etc/systemd/system/myscript.service`
 ```
 [Unit]
@@ -28,6 +29,11 @@ Start service with
 sudo systemctl start myscript    # Runs the script now
 sudo systemctl enable myscript   # Sets the script to run every boot
 ```
-
-## How to run manually
+## How to run manually (Option 2)
 Execute `main.py`
+## Change reconnect time
+Open file `./webController.py`  
+Change line as desired  
+```python
+ if ((datetime.now() - self.LastReconnect).total_seconds() > 10800 and datetime.now().hour == 3)
+```
