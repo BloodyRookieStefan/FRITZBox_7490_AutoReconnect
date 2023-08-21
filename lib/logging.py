@@ -6,8 +6,13 @@ from datetime import datetime
 LogFile = '{}//logging.log'.format(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 # First log flag
 FirstLogging = True
+# ----- Log settings -----
+UseLogFile = True
 # Setting - Log only WARNING and ERROR in file
 HighValueLogging = False
+# Maximum line numbers in log file
+MaxLineNumber = 500
+# ------------------------
 
 # Enum log level
 class WarningLevel(Enum):
@@ -38,15 +43,32 @@ def _logging(_type, _msg):
             if os.path.exists(LogFile):
                 os.remove(LogFile)
             with open(LogFile, 'a') as f:
-                f.write(f"{datetime.now().strftime('%d.%m.%Y-%H:%M:%S')} SYSTEM> Logfile created - HighValueLogging=={HighValueLogging}\n")
+                f.write(f"{datetime.now().strftime('%d.%m.%Y-%H:%M:%S')} SYSTEM> Logfile created - HighValueLogging={HighValueLogging} - UseLogFile={UseLogFile}\n")
             FirstLogging = False
         
-        if HighValueLogging and (_type == WarningLevel.Warning or _type == WarningLevel.Error) or not HighValueLogging:
+        # Skip here if no log file should be used
+        if not UseLogFile:
+            return
+
+        if not HighValueLogging or (HighValueLogging and (_type == WarningLevel.Warning or _type == WarningLevel.Error)):
+            # Add char return
+            logText = logText +"\n"
+            
+            # Read back log file
+            lines = []
+            with open(LogFile, 'r') as f:
+                lines = f.readlines()
+
+            # When max line number has been reached remove oldest entry
+            if len(lines) >= MaxLineNumber:
+                lines.remove(0)
+            lines.append(logText)
+
             # Write in log file
-            with open(LogFile, 'a') as f:
-                f.write(logText +"\n")
-    except:
-        pass
+            with open(LogFile, 'w') as f:
+                f.writelines(lines)
+    except Exception as e:
+        print(f'WARNING> Could not write in log file: {type(e).__name__}, Args: {e.args}')
     
 
 # Log info
