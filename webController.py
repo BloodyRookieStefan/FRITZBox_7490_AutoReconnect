@@ -8,8 +8,8 @@ from lib.logging import log_info, log_warning, log_error
 
 class CWebController:
     
-    LastReconnect = None        # Datetime of last reconnect
-    LastHeartBeat = -1
+    LastReconnect = None                    # Datetime of last reconnect
+    LastHeartBeat = datetime.now()          # Last heartbeat written in console
 
     def __init__(self) -> None:
         if Settings.ReConnectOnStartup:
@@ -31,18 +31,17 @@ class CWebController:
         else:
             log_info('Joining endless loop...')
             while True:
-                # Last reconnect is over 3 Hours and current Hour is 3AM
-                if ((datetime.now() - self.LastReconnect).total_seconds() > 10800 and datetime.now().hour == 3) or self.LastReconnect.year == 1980:
+                # Last reconnect is over 1 Hours and current Hour is 3AM
+                if ((datetime.now() - self.LastReconnect).total_seconds() > 3601 and datetime.now().hour == 3) or self.LastReconnect.year == 1980:
                     print('Send trigger')
                     self.trigger()
                 
                 # Send heartbeat
-                if datetime.now().hour != self.LastHeartBeat:
-                    print(f'Heartbeat at {datetime.now().strftime("%d.%m.%Y-%H")} O\'Clock - Delta: {(datetime.now() - self.LastReconnect).total_seconds()}[s] - Last reconnect: {self.LastReconnect.strftime("%d.%m.%Y-%H:%M:%S")}')
-                    self.LastHeartBeat = datetime.now().hour
+                if datetime.now().hour != self.LastHeartBeat.hour:
+                    print(f'Heartbeat at {datetime.now().strftime("%d.%m.%Y-%H")} O\'Clock - Delta: {round((datetime.now() - self.LastReconnect).total_seconds(), 2)}[s] - Last reconnect: {self.LastReconnect.strftime("%d.%m.%Y-%H:%M:%S")}')
+                    self.LastHeartBeat = datetime.now()
 
-                # Wait 30 seconds
-                time.sleep(30)
+                self.sleep()
 
     # Trigger for reconnect
     def trigger(self):
@@ -74,3 +73,8 @@ class CWebController:
         sqlController = SQLite.CDBController()
         sqlController.addConnectionData(connectData, dlData)
         sqlController.close()
+
+    # Sleep till next check
+    def sleep(self):
+        minToNextHour = 60 - datetime.now().minute
+        time.sleep(max((minToNextHour - 2), 1) * 60)    

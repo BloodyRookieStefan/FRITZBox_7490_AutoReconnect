@@ -1,5 +1,5 @@
 # FRITZBox_7490_AutoReconnect
-Reconnect automatically every 24 hours with your DSL provider
+Reconnect automatically every 24 hours to your DSL provider using 
 ## Requirements
 * Python 3.7 [www.python.org](https://www.python.org/)
 * Selenium package

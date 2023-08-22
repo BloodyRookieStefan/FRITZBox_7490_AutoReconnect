@@ -98,8 +98,9 @@ class CFritzBoxBrowser(CBrowser):
     # Click on reconnect button
     def click_reconnect(self):
         log_info('Click "Reconnect" button')
-        # Press button
         xpath = '//*[@id="uiReconnectBtn"]'
+        self.b_scrollIntoView(type=By.XPATH, tag=xpath)
+        # Press button
         self.b_pressButton(type=By.XPATH, tag=xpath)
         log_info('Wait 1 minute...')
         # Wait 1 minute

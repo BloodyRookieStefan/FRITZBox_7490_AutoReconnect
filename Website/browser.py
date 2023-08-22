@@ -2,6 +2,8 @@ import os
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
+from selenium.webdriver import ActionChains, Keys
 from lib.settings import  Settings, OperatingSystem
 
 class CBrowser:
@@ -44,7 +46,7 @@ class CBrowser:
         self.Driver.refresh()
 
     # Get text value from attribute
-    def b_getTextValue(self, type, tag, to=300):
+    def b_getTextValue(self, type, tag, to=120):
         # Wait till button is present
         self.b_wait_until_tag_is_present(type=type, tag=tag)
         # Search and get element data
@@ -54,15 +56,28 @@ class CBrowser:
     # type = By.ID / By.CLASS_NAME ....
     # tag = Name of item
     # to = Timeout in seconds
-    def b_wait_until_tag_is_present(self, type, tag, to=300):
+    def b_wait_until_tag_is_present(self, type, tag, to=120):
         WebDriverWait(self.Driver, to).until(EC.presence_of_element_located((type, tag))) 
 
     # Wait until tag is clickable
     # type = By.ID / By.CLASS_NAME ....
     # tag = Name of item
     # to = Timeout in seconds
-    def b_wait_until_tag_is_clickable(self, type, tag, to=300):
+    def b_wait_until_tag_is_clickable(self, type, tag, to=120):
         WebDriverWait(self.Driver, to).until(EC.element_to_be_clickable((type, tag))) 
+
+    # Scroll down until tag comes into view
+    # type = By.ID / By.CLASS_NAME ....
+    # tag = Name of item
+    # to = Timeout in seconds
+    def b_scrollIntoView(self, type, tag, to=120):
+        # Chromium only action
+        element = self.Driver.find_element(type, tag)
+        ActionChains(self.Driver).scroll_to_element(element).perform()
+        # Because of "refresh" footer click 2 times arrow down => Otherwise button is hidden behind "refresh" footer
+        # Tested with 800x480 resolution => HAMTYSAN 7 Zoll Raspberry Pi Display Mini Monitor
+        ActionChains(self.Driver).send_keys(Keys.ARROW_DOWN).perform()
+        ActionChains(self.Driver).send_keys(Keys.ARROW_DOWN).perform()
 
     # Switch back to default frame
     def b_switch_toDefaultFrame(self):
@@ -87,6 +102,4 @@ class CBrowser:
         # Wait till button is clickable
         self.b_wait_until_tag_is_clickable(type=type, tag=tag)
         # Search and find textbox
-        self.Driver.find_element(type, tag).send_keys(text)
-
-    
+        self.Driver.find_element(type, tag).send_keys(text)    
