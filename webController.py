@@ -31,7 +31,7 @@ class CWebController:
         else:
             log_info('Joining endless loop...')
             while True:
-                # Last reconnect is over 1 Hours and current Hour is 3AM
+                # Last reconnect is over 1 Hour and current Hour is 3AM
                 if ((datetime.now() - self.LastReconnect).total_seconds() > 3601 and datetime.now().hour == 3) or self.LastReconnect.year == 1980:
                     print('Send trigger')
                     self.trigger()

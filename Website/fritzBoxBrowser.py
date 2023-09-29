@@ -1,4 +1,4 @@
-import time
+import time, re
 
 from .browser import CBrowser
 from selenium.webdriver.common.by import By
@@ -64,15 +64,29 @@ class CFritzBoxBrowser(CBrowser):
         data = dict()
         
         # Get IP4 data
-        xpath = '//*[@id="ipv4_info"]/span[1]'
-        data['IP4_connect_date'] = datetime.strptime(self.b_getTextValue(type=By.XPATH, tag=xpath), 'verbunden seit %d.%m.%Y, %H:%M Uhr')
-        xpath = ' //*[@id="ipv4_info"]/span[2]'
-        data['IP4_provider'] = self.b_getTextValue(type=By.XPATH, tag=xpath)
-        xpath = '//*[@id="ipv4_info"]/span[3]'
-        data['IP4_speed_down'] = float(self.b_getTextValue(type=By.XPATH, tag=xpath).split(' ')[6].replace(',', '.'))
-        data['IP4_speed_up'] = float(self.b_getTextValue(type=By.XPATH, tag=xpath).split(' ')[9].replace(',', '.'))
-        xpath = '//*[@id="ipv4_info"]/span[4]'
-        data['IP4_adress'] = self.b_getTextValue(type=By.XPATH, tag=xpath).split(' ')[1]
+        xpath = '//*[@id="uiDslIpv4"]/div[3]'
+        dataIPv4Raw = self.b_getTextValue(type=By.XPATH, tag=xpath)
+
+        # Connection time
+        regexSTR = '^[aA-xX ]+([0-9.]+), ([0-9]+:[0-9]+).*$'
+        g = self.regex(regexSTR, dataIPv4Raw)
+        data['IP4_connect_date'] = datetime.strptime(f'{g[0]}, {g[1]}', '%d.%m.%Y, %H:%M')
+        # Provider
+        regexSTR = '^.*, .*, ([aA-zZ]+), .*$'
+        g = self.regex(regexSTR, dataIPv4Raw)
+        data['IP4_provider'] = g[0]
+        # Download speed
+        regexSTR = '^.*↓ ([0-9,]+) Mbit\/s.*$'
+        g = self.regex(regexSTR, dataIPv4Raw)
+        data['IP4_speed_down'] = float(g[0].replace(',', '.'))
+        # Upload speed
+        regexSTR = '^.*↑ ([0-9,]+) Mbit\/s.*$'
+        g = self.regex(regexSTR, dataIPv4Raw)
+        data['IP4_speed_up'] = float(g[0].replace(',', '.'))
+        # IP Adress
+        regexSTR = '^.* ([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)$'
+        g = self.regex(regexSTR, dataIPv4Raw)
+        data['IP4_adress'] = g[0]
 
         return data
     
@@ -106,3 +120,8 @@ class CFritzBoxBrowser(CBrowser):
         # Wait 1 minute
         time.sleep(60)      
 
+    # Process regex
+    def regex(self, pattern, input):
+        matches = re.finditer(pattern, input, re.MULTILINE)
+        for matchNum, match in enumerate(matches, start=1):
+            return match.groups()
