@@ -96,15 +96,15 @@ class CFritzBoxBrowser(CBrowser):
         data = dict()
 
         # Get DL data
-        xpath = '//*[@id="uiToday"]/td[2]'
+        xpath = '//*[@id="uiYesterday"]/td[2]'
         data['DL_online_today'] = int(self.b_getTextValue(type=By.XPATH, tag=xpath).split(':')[0]) * 100 + int(self.b_getTextValue(type=By.XPATH, tag=xpath).split(':')[1])
-        xpath = '//*[@id="uiToday"]/td[3]'
+        xpath = '//*[@id="uiYesterday"]/td[3]'
         data['DL_datavolume_total'] = int(self.b_getTextValue(type=By.XPATH, tag=xpath))
-        xpath = '//*[@id="uiToday"]/td[4]'
+        xpath = '//*[@id="uiYesterday"]/td[4]'
         data['DL_datavolume_send'] = int(self.b_getTextValue(type=By.XPATH, tag=xpath))
-        xpath = '//*[@id="uiToday"]/td[5]'
+        xpath = '//*[@id="uiYesterday"]/td[5]'
         data['DL_datavolume_recive'] = int(self.b_getTextValue(type=By.XPATH, tag=xpath))
-        xpath = '//*[@id="uiToday"]/td[6]'
+        xpath = '//*[@id="uiYesterday"]/td[6]'
         data['DL_connections'] = int(self.b_getTextValue(type=By.XPATH, tag=xpath))
 
         return data
