@@ -61,7 +61,7 @@ def _logging(_type, _msg):
 
             # When max line number has been reached remove oldest entry
             if len(lines) >= MaxLineNumber:
-                lines.remove(0)
+                del lines[0]
             lines.append(logText)
 
             # Write in log file
